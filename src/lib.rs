@@ -73,7 +73,7 @@ pub struct Hotloader<T: HotloadProxy> {
 
 impl <T: HotloadProxy> Hotloader<T> {
   /** Build a fresh hotloader from a path to a dylib */
-  fn new(dylib_path: PathBuf) -> Hotloader<T> {
+  pub fn new(dylib_path: PathBuf) -> Hotloader<T> {
     let mut hotloader = Hotloader {
       proxy: None,
       watched_path: dylib_path,
@@ -82,6 +82,12 @@ impl <T: HotloadProxy> Hotloader<T> {
 
     hotloader.try_hotload();
     hotloader
+  }
+
+  /** Get the *optional* method proxy. It may not be present if hotloading fails */
+  pub fn get_proxy(&mut self) -> Option<&mut T> {
+    self.try_hotload();
+    self.proxy.as_mut()
   }
 
   /** Attempt a hotload or do nothing */
@@ -106,11 +112,5 @@ impl <T: HotloadProxy> Hotloader<T> {
 
     self.proxy = new_proxy;
     self.last_modified = new_last_modified;
-  }
-
-  /** Get the *optional* method proxy. It may not be present if hotloading fails */
-  fn get_proxy(&mut self) -> Option<&mut T> {
-    self.try_hotload();
-    self.proxy.as_mut()
   }
 }
