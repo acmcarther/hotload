@@ -4,7 +4,7 @@ extern crate libloading;
 #[cfg(unix)]
 use libloading::os::unix::Symbol;
 #[cfg(windows)]
-use libloading::os::unix::Symbol;
+use libloading::os::windows::Symbol;
 
 use libloading::Library;
 use std::path::PathBuf;
